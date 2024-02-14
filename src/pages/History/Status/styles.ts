@@ -6,6 +6,7 @@ export const StatusContainer = styled.div`
   align-items: center;
   justify-content: left;
   gap: 0.5rem;
+
   i {
     height: 0.5rem;
     width: 0.5rem;
@@ -13,12 +14,12 @@ export const StatusContainer = styled.div`
   }
 
   .andamento {
-    background-color: red;
+    background-color: ${(props) => props.theme['gray-100']};
   }
   .concluido {
-    background-color: green;
+    background-color: ${(props) => props.theme['green-300']};
   }
   .interrompido {
-    background-color: gray;
+    background-color: ${(props) => props.theme['red-500']};
   }
 `

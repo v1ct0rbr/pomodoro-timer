@@ -22,8 +22,21 @@ export const HistoryList = styled.div`
     border-collapse: collapse;
     min-width: 600px;
 
+    thead {
+      tr {
+        background-color: ${(props) => props.theme['gray-600']};
+      }
+    }
+    tbody {
+      tr {
+        background-color: ${(props) => props.theme['gray-700']};
+      }
+      tr:hover {
+        background: ${(props) => props.theme['gray-600']};
+      }
+    }
+
     th {
-      background-color: ${(props) => props.theme['gray-600']};
       padding: 1rem;
       text-align: left;
       color: ${(props) => props.theme['gray-100']};
@@ -42,7 +55,6 @@ export const HistoryList = styled.div`
       }
     }
     td {
-      background-color: ${(props) => props.theme['gray-700']};
       border-top: 4px solid ${(props) => props.theme['gray-800']};
       padding: 1rem;
       font-size: 0.875rem;
