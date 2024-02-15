@@ -5,10 +5,23 @@ interface StatusProps {
 }
 
 export function Status({ statusType }: StatusProps) {
+  const getContentByStatus = (): string => {
+    switch (statusType) {
+      case 'andamento':
+        return 'Em andamento'
+      case 'concluido':
+        return 'Concluído'
+      case 'interrompido':
+        return 'Interrompido'
+      default:
+        return ''
+    }
+  }
+
   return (
     <StatusContainer>
       <i className={statusType}></i>
-      <span>{statusType}</span>
+      <span>{getContentByStatus()}</span>
     </StatusContainer>
   )
 }

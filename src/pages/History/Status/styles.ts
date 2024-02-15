@@ -14,7 +14,7 @@ export const StatusContainer = styled.div`
   }
 
   .andamento {
-    background-color: ${(props) => props.theme['gray-100']};
+    background-color: ${(props) => props.theme['yellow-500']};
   }
   .concluido {
     background-color: ${(props) => props.theme['green-300']};
