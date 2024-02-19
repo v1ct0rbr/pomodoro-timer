@@ -1,26 +1,27 @@
-import { useEffect, useState } from 'react'
-import { CountDownContainer, Separator } from './styles'
 import { differenceInSeconds } from 'date-fns'
-import { Cycle } from '../..'
+import { useContext, useEffect } from 'react'
+import { CyclesContext } from '../..'
+import { CountDownContainer, Separator } from './styles'
 
-interface CountdownProps {
-  minutes: string
-  seconds: string
-  activeCycle?: Cycle
-  activeCycleId?: string
-  setCycles: (cycles: Cycle[]) => void
-}
-
-export function Countdown({
-  minutes,
-  seconds,
-  activeCycle,
-  activeCycleId,
-  setCycles,
-}: CountdownProps) {
-  const [amountSecondsPassed, setAmountSecondsPassed] = useState(0)
+export function Countdown() {
+  const {
+    activeCycle,
+    markCycleAsFinished,
+    amountSecondsPassed,
+    updateSecondsPassed,
+  } = useContext(CyclesContext)
 
   const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0
+  const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0
+  const minutesAmount = Math.floor(currentSeconds / 60)
+  const secondsAmount = currentSeconds % 60
+
+  const minutes = String(minutesAmount).padStart(2, '0')
+  const seconds = String(secondsAmount).padStart(2, '0')
+
+  useEffect(() => {
+    if (activeCycle) document.title = `${minutes}:${seconds}`
+  }, [minutes, seconds, activeCycle])
 
   useEffect(() => {
     let interval: number
@@ -33,26 +34,18 @@ export function Countdown({
         )
 
         if (secondsDifference >= totalSeconds) {
-          setCycles((state) =>
-            state.map((cycle) => {
-              if (cycle.id === activeCycleId) {
-                return { ...cycle, finishedDate: new Date() }
-              } else {
-                return cycle
-              }
-            }),
-          )
-          setAmountSecondsPassed(totalSeconds)
+          markCycleAsFinished()
+          updateSecondsPassed(totalSeconds)
           clearInterval(interval)
         } else {
-          setAmountSecondsPassed(secondsDifference)
+          updateSecondsPassed(secondsDifference)
         }
       }, 1000)
     }
     return () => {
       clearInterval(interval)
     }
-  }, [activeCycle])
+  }, [activeCycle, totalSeconds, markCycleAsFinished])
 
   return (
     <CountDownContainer>

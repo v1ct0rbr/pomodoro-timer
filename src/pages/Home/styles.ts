@@ -9,4 +9,10 @@ export const HomeContainer = styled.main`
   align-items: center;
   justify-content: center;
   margin: auto;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
 `
