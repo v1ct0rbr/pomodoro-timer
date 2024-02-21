@@ -1,7 +1,12 @@
+import { useContext } from 'react'
 import { Status } from './Status'
 import { HistoryContainer, HistoryList } from './styles'
+import { CyclesContext } from '../../contexts/CyclesContext'
+import { formatDistanceToNow } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
 export function History() {
+  const { cycles, activeCycle } = useContext(CyclesContext)
   return (
     <HistoryContainer>
       <h1>Meu histórico</h1>
@@ -16,46 +21,27 @@ export function History() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Tarefa</td>
-              <td>20 minutos</td>
-              <td>Há 2 meses</td>
-              <td>
-                <Status statusType="andamento" />
-              </td>
-            </tr>
-            <tr>
-              <td>Tarefa</td>
-              <td>20 minutos</td>
-              <td>Há 2 meses</td>
-              <td>
-                <Status statusType="concluido" />
-              </td>
-            </tr>
-            <tr>
-              <td>Tarefa</td>
-              <td>20 minutos</td>
-              <td>Há 2 meses</td>
-              <td>
-                <Status statusType="interrompido" />
-              </td>
-            </tr>
-            <tr>
-              <td>Tarefa</td>
-              <td>20 minutos</td>
-              <td>Há 2 meses</td>
-              <td>
-                <Status statusType="interrompido" />
-              </td>
-            </tr>
-            <tr>
-              <td>Tarefa</td>
-              <td>20 minutos</td>
-              <td>Há 2 meses</td>
-              <td>
-                <Status statusType="interrompido" />
-              </td>
-            </tr>
+            {cycles.map((cycle) => (
+              <tr key={cycle.id}>
+                <td>{cycle.task}</td>
+                <td>{cycle.minutesAmount}</td>
+                <td>
+                  {formatDistanceToNow(cycle.startDate, {
+                    addSuffix: true,
+                    locale: ptBR,
+                  })}
+                </td>
+                <td>
+                  {activeCycle && activeCycle.id === cycle.id ? (
+                    <Status statusType="andamento" />
+                  ) : cycle.finishedDate ? (
+                    <Status statusType="concluido" />
+                  ) : (
+                    <Status statusType="interrompido" />
+                  )}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </HistoryList>
