@@ -5,15 +5,13 @@ import { CountDownContainer, Separator } from './styles'
 import { CyclesContext } from '../../../../contexts/CyclesContext'
 
 export function Countdown() {
-  const {
-    activeCycle,
-    markCycleAsFinished,
-    amountSecondsPassed,
-    updateSecondsPassed,
-  } = useContext(CyclesContext)
+  const { activeCycle, stateCycle, markCycleAsFinished, updateSecondsPassed } =
+    useContext(CyclesContext)
 
   const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0
-  const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0
+  const currentSeconds = activeCycle
+    ? totalSeconds - stateCycle.amountSecondsPassed
+    : 0
   const minutesAmount = Math.floor(currentSeconds / 60)
   const secondsAmount = currentSeconds % 60
 
