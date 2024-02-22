@@ -16,6 +16,7 @@ export interface CreateCycleData {
 
 export interface StateCycle {
   cycles: Cycle[]
+  activeCycle: Cycle
   activeCycleId: string | null
   amountSecondsPassed: number
 }
@@ -26,6 +27,7 @@ interface CyclesContextType {
   updateSecondsPassed: (seconds: number) => void
   createNewCycle: (data: CreateCycleData) => void
   interruptCurrentCycle: () => void
+  removeCycle: (cycleId: string) => void
   stateCycle: StateCycle
 }
 export const CyclesContext = createContext({} as CyclesContextType)
@@ -50,6 +52,19 @@ type Action =
       payload: { amount: number }
     }
 
+function newCycleConstructor(data: CreateCycleData): Cycle {
+  return {
+    id: crypto.randomUUID(),
+    task: data.task,
+    minutesAmount: data.minutesAmount,
+    startDate: new Date(),
+  }
+}
+
+function newEmptyCycleConstructor(): Cycle {
+  return { minutesAmount: 0, startDate: new Date() } as Cycle
+}
+
 export function CyclesContextProvider({
   children,
 }: CyclesContextProviderProps) {
@@ -63,12 +78,14 @@ export function CyclesContextProvider({
         return {
           ...stateCycle,
           activeCycleId: action.payload.cycle.id,
+          activeCycle: action.payload.cycle,
           amountSecondsPassed: 0,
           cycles: [action.payload.cycle, ...stateCycle.cycles],
         }
       case 'REMOVE_ITEM':
         return {
           ...stateCycle,
+
           cycles: stateCycle.cycles.filter(
             (cycle) => cycle.id !== action.payload.id,
           ),
@@ -87,6 +104,8 @@ export function CyclesContextProvider({
           ...stateCycle,
           cycles: updatedCycles,
           activeCycleId: null,
+          activeCycle: newEmptyCycleConstructor(),
+          amountSecondsPassed: 0,
         }
       }
       case 'MARK_CURRENT_CYCLE_AS_FINISHED': {
@@ -101,7 +120,10 @@ export function CyclesContextProvider({
         })
         return {
           ...stateCycle,
+          activeCycleId: null,
+          activeCycle: newEmptyCycleConstructor(),
           cycles: updatedCycles,
+          amountSecondsPassed: 0,
         }
       }
       case 'UPDATE_AMOUNT_SECONDS_PASSED': {
@@ -114,14 +136,10 @@ export function CyclesContextProvider({
 
   const [stateCycle, dispatch] = useReducer(cycleReducer, {
     activeCycleId: null,
-    cycles: [],
+    cycles: [] as Array<Cycle>,
+    activeCycle: { minutesAmount: 0, startDate: new Date() },
     amountSecondsPassed: 0,
   } as StateCycle)
-
-  const { cycles } = stateCycle as StateCycle
-  const activeCycle = cycles.find(
-    (cycle) => cycle.id === stateCycle.activeCycleId,
-  )
 
   function updateSecondsPassed(seconds: number) {
     // setAmountSecondsPassed(seconds)
@@ -143,12 +161,7 @@ export function CyclesContextProvider({
   }
 
   function createNewCycle(data: CreateCycleData) {
-    const newCycle: Cycle = {
-      id: crypto.randomUUID(),
-      task: data.task,
-      minutesAmount: data.minutesAmount,
-      startDate: new Date(),
-    }
+    const newCycle: Cycle = newCycleConstructor(data)
 
     dispatch({
       type: 'ADD_NEW_CYCLE',
@@ -167,6 +180,15 @@ export function CyclesContextProvider({
     })
   }
 
+  function removeCycle(cycleId: string) {
+    dispatch({
+      type: 'REMOVE_ITEM',
+      payload: {
+        id: cycleId,
+      },
+    })
+  }
+
   return (
     <CyclesContext.Provider
       value={{
@@ -174,8 +196,9 @@ export function CyclesContextProvider({
         updateSecondsPassed,
         createNewCycle,
         interruptCurrentCycle,
-        activeCycle,
+        activeCycle: stateCycle.activeCycle,
         stateCycle,
+        removeCycle,
       }}
     >
       {children}

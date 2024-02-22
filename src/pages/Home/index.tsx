@@ -16,7 +16,7 @@ const newCycleFormValidationSchema = zod.object({
   task: zod.string().min(1, 'Informe a tarefa'),
   minutesAmount: zod
     .number()
-    .min(5, 'A quantidade de minutos deve ser igual ou superior a 5')
+    .min(1, 'A quantidade de minutos deve ser igual ou superior a 5')
     .max(60, 'A quantidade de minutos deve ser menor ou igua a 60'),
 })
 
@@ -55,7 +55,7 @@ export function Home() {
           <NewCycleForm />
         </FormProvider>
         <Countdown />
-        {activeCycle ? (
+        {activeCycle?.id ? (
           <StopCountDownButton type="button" onClick={interruptCurrentCycle}>
             <StopCircle size={24}></StopCircle>
             Interromper

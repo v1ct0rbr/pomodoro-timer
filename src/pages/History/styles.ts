@@ -69,3 +69,18 @@ export const HistoryList = styled.div`
     }
   }
 `
+export const ListButton = styled.button`
+  width: 2.5rem;
+  height: 2.5rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${(props) => props.theme['gray-900']};
+  color: ${(props) => props.theme.white};
+`
+export const ListDeleteButton = styled(ListButton)`
+  background: ${(props) => props.theme['red-700']};
+`

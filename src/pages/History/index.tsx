@@ -1,12 +1,13 @@
-import { useContext } from 'react'
-import { Status } from './Status'
-import { HistoryContainer, HistoryList } from './styles'
-import { CyclesContext } from '../../contexts/CyclesContext'
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { Trash2 } from 'lucide-react'
+import { useContext } from 'react'
+import { CyclesContext } from '../../contexts/CyclesContext'
+import { Status } from './Status'
+import { HistoryContainer, HistoryList, ListDeleteButton } from './styles'
 
 export function History() {
-  const { activeCycle, stateCycle } = useContext(CyclesContext)
+  const { activeCycle, stateCycle, removeCycle } = useContext(CyclesContext)
   return (
     <HistoryContainer>
       <h1>Meu histórico</h1>
@@ -18,6 +19,7 @@ export function History() {
               <th>Duração</th>
               <th>Início</th>
               <th>Status</th>
+              <th>Opções</th>
             </tr>
           </thead>
           <tbody>
@@ -39,6 +41,11 @@ export function History() {
                   ) : (
                     <Status statusType="interrompido" />
                   )}
+                </td>
+                <td>
+                  <ListDeleteButton onClick={() => removeCycle(cycle.id)}>
+                    <Trash2></Trash2>
+                  </ListDeleteButton>
                 </td>
               </tr>
             ))}

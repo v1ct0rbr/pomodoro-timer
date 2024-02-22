@@ -8,8 +8,8 @@ export function Countdown() {
   const { activeCycle, stateCycle, markCycleAsFinished, updateSecondsPassed } =
     useContext(CyclesContext)
 
-  const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0
-  const currentSeconds = activeCycle
+  const totalSeconds = activeCycle?.id ? activeCycle.minutesAmount * 60 : 0
+  const currentSeconds = activeCycle?.id
     ? totalSeconds - stateCycle.amountSecondsPassed
     : 0
   const minutesAmount = Math.floor(currentSeconds / 60)
@@ -25,7 +25,7 @@ export function Countdown() {
   useEffect(() => {
     let interval: number
 
-    if (activeCycle) {
+    if (activeCycle?.id) {
       interval = setInterval(() => {
         const secondsDifference = differenceInSeconds(
           new Date(),
@@ -35,6 +35,7 @@ export function Countdown() {
         if (secondsDifference >= totalSeconds) {
           markCycleAsFinished()
           updateSecondsPassed(totalSeconds)
+          console.log('finalizou')
           clearInterval(interval)
         } else {
           updateSecondsPassed(secondsDifference)
@@ -42,9 +43,10 @@ export function Countdown() {
       }, 1000)
     }
     return () => {
+      /* updateSecondsPassed(totalSeconds) */
       clearInterval(interval)
     }
-  }, [activeCycle, totalSeconds, markCycleAsFinished])
+  }, [activeCycle, totalSeconds, markCycleAsFinished, updateSecondsPassed])
 
   return (
     <CountDownContainer>
