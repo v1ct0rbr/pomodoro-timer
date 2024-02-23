@@ -13,6 +13,6 @@ export const HomeContainer = styled.main`
   form {
     display: flex;
     flex-direction: column;
-    gap: 3rem;
+    gap: 1rem;
   }
 `

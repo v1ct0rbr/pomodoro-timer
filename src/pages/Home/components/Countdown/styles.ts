@@ -1,17 +1,30 @@
 import styled from 'styled-components'
+import { device } from '../../../../styles/global'
 export const CountDownContainer = styled.div`
   font-family: 'Robot Mono', monospace;
-  font-size: 11rem;
-  line-height: 8rem;
+  margin: auto;
   color: ${(props) => props.theme['gray-100']};
-
   display: flex;
   gap: 1rem;
-
   span {
     background: ${(props) => props.theme['gray-700']};
     padding: 2rem 1rem;
     border-radius: 8px;
+  }
+
+  @media ${device.desktop} {
+    font-size: 11rem;
+    line-height: 8rem;
+  }
+
+  @media ${device.laptop} {
+    font-size: 8rem;
+    line-height: 8rem;
+  }
+
+  @media ${device.tablet} {
+    font-size: 4rem;
+    line-height: 8rem;
   }
 `
 
