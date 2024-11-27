@@ -23,7 +23,7 @@ export function Countdown() {
   }, [minutes, seconds, activeCycle])
 
   useEffect(() => {
-    let interval: number
+    let interval: ReturnType<typeof setInterval>
 
     if (activeCycle?.id) {
       interval = setInterval(() => {
